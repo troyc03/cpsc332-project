@@ -33,3 +33,22 @@ The extension script expects the original `world.Country`, `world.City`, and `wo
 ## Project requirements
 
 The assignment calls for at least three additional tables, primary and foreign keys, relationships/integrity constraints, 20 innovative SQL queries (at least 10 using joins and at least 10 using subqueries), and a four-page-minimum APA-style report (excluding title and references) plus a 10–15 minute presentation. See the course instructions supplied to the team for the authoritative requirements and due date.
+
+
+## Completion support files (added on `completion-work`)
+
+- `tests/check_query_rows.py`: executes all 20 SELECT queries and reports actual row counts / minimum-four-row pass status. This is a test tool, not proof that the queries have been run.
+- `tests/requirements.txt`: Python connector dependency.
+- `docs/validation-results-template.md`: query-by-query test evidence record.
+- `docs/report-outline-and-writing-guide.md`: report structure and writing/format checklist.
+- `docs/presentation-outline.md`: 10-slide, 10-15-minute presentation outline.
+- `docs/data-sources.md`: candidate official World Bank indicators and URLs. The current indicator rows remain synthetic until replaced with retrieved, cited observations.
+
+Run query validation after loading the base schema and indicator extension:
+
+```bash
+python -m pip install -r tests/requirements.txt
+MYSQL_HOST=127.0.0.1 MYSQL_PORT=3306 MYSQL_USER=root MYSQL_PASSWORD='your-password' MYSQL_DATABASE=world python tests/check_query_rows.py
+```
+
+The validation script does not alter the database. It prints each query's returned row count and exits nonzero if a query errors or returns fewer than four rows.
