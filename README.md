@@ -52,3 +52,17 @@ MYSQL_HOST=127.0.0.1 MYSQL_PORT=3306 MYSQL_USER=root MYSQL_PASSWORD='your-passwo
 ```
 
 The validation script does not alter the database. It prints each query's returned row count and exits nonzero if a query errors or returns fewer than four rows.
+
+## Additional coding validation and source tools
+
+- `sql/03_schema_verification.sql`: run after the extension script to inspect PK/FK metadata, row counts, duplicate composite keys, and orphan country codes. Expected duplicate/orphan checks return no rows.
+- `scripts/fetch_worldbank_data.py`: retrieves traceable World Bank indicator observations for the sample countries (2019–2023) into `data/worldbank_observations.csv`; it does not load the database or replace the illustrative SQL inserts.
+- `docs/data-retrieval.md`: explains the indicator mapping, provenance fields, and year-alignment requirements.
+
+Run the retrieval script with Python 3:
+
+```bash
+python3 scripts/fetch_worldbank_data.py
+```
+
+The subquery investigations Q12, Q15, and Q19 now use above-sample-average comparisons rather than minimum-value conditions that included almost the entire sample. Q16 compares each official-language share against the average official-language share within that country. These changes make the filters more investigative, but row counts and results still must be verified on the team's actual database.
