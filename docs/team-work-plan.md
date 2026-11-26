@@ -10,10 +10,10 @@ This branch adds a project README, three country-level indicator tables with ill
 
 | Workstream | Suggested owner | Tasks |
 |---|---|---|
-| Schema and ERD | Member 1 | Run scripts, verify keys/constraints, update editable Workbench ERD and physical model |
-| Data and sources | Member 2 | Replace or supplement illustrative values with traceable UN/World Bank sources; record source, year, units, URL |
-| Query testing | Member 3 | Execute Q01–Q20, capture row counts, improve originality, explain results and limitations |
-| Report and presentation | Member 4 | Assemble APA report, references, slides, demo sequence, and coordinate review |
+| Schema and ERD | Troy Chin | Run scripts, verify keys/constraints, update editable Workbench ERD and physical model |
+| Data and sources | Dominik Pelikan | Replace or supplement illustrative values with traceable UN/World Bank sources; record source, year, units, URL |
+| Query testing | Mohit Sharma | Execute Q01–Q20, capture row counts, improve originality, explain results and limitations |
+| Report and presentation | Armin Tehrani | Assemble APA report, references, slides, demo sequence, and coordinate review |
 
 All members should review the complete project and contribute to the report/demo. Reassign work based on availability; this table is a starting point, not a substitute for the course's peer-contribution process.
 

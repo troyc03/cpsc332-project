@@ -2,10 +2,8 @@
 
 **Team name:** [Insert]  
 **Course:** CPSC 332, Fall 2026  
-**Team members:** [Insert all members]  
-**Date:** [Insert]
-
-> Draft scaffold: replace bracketed fields with your team's verified observations and decisions. Do not report synthetic sample values as official data. Include the actual result tables/screenshots and row counts from MySQL.
+**Team members:** Troy Chin, Dominik Pelikan, Mohit Sharma, Armin Tehrani
+**Date:** 11/01/2026
 
 ## 1. Introduction
 
