@@ -135,16 +135,16 @@ WHERE e.IndicatorYear = 2023
   )
 ORDER BY e.GDPPerCapitaUSD DESC;
 
--- Q12. Countries whose literacy is at least the lowest value in this sample.
--- Purpose: inspect education investment and national language records.
+-- Q12. Countries with literacy above the sample average.
+-- Purpose: identify above-average literacy countries and inspect spending/language records.
 SELECT c.Name, d.LiteracyRatePct, d.EducationExpenditurePctGDP,
        cl.Language, cl.IsOfficial
 FROM Country AS c
 JOIN EducationIndicator AS d ON d.CountryCode = c.Code
 JOIN CountryLanguage AS cl ON cl.CountryCode = c.Code
 WHERE d.IndicatorYear = 2023
-  AND d.LiteracyRatePct >= (
-      SELECT MIN(d2.LiteracyRatePct)
+  AND d.LiteracyRatePct > (
+      SELECT AVG(d2.LiteracyRatePct)
       FROM EducationIndicator AS d2
       WHERE d2.IndicatorYear = 2023
   )
@@ -183,22 +183,22 @@ WHERE h.IndicatorYear = 2023
   )
 ORDER BY h.PhysiciansPer1000 DESC;
 
--- Q15. Countries with GDP per capita greater than the smallest sample observation.
--- Purpose: examine education indicators across nearly the entire sample.
+-- Q15. Countries with GDP per capita above the sample mean.
+-- Purpose: compare education indicators among above-average-income countries.
 SELECT c.Name, e.GDPPerCapitaUSD, d.LiteracyRatePct, d.TertiaryEnrollmentPct
 FROM Country AS c
 JOIN EconomicIndicator AS e ON e.CountryCode = c.Code
 JOIN EducationIndicator AS d ON d.CountryCode = c.Code AND d.IndicatorYear = e.IndicatorYear
 WHERE e.IndicatorYear = 2023
   AND e.GDPPerCapitaUSD > (
-      SELECT MIN(e2.GDPPerCapitaUSD)
+      SELECT AVG(e2.GDPPerCapitaUSD)
       FROM EconomicIndicator AS e2
       WHERE e2.IndicatorYear = 2023
   )
 ORDER BY d.TertiaryEnrollmentPct DESC;
 
--- Q16. Countries whose official language has a recorded share above zero.
--- Purpose: pair language demographics with national health and education data.
+-- Q16. Official-language records with a share above that country's official-language average.
+-- Purpose: identify relatively widely spoken official languages within each country.
 SELECT c.Name, cl.Language, cl.Percentage, h.PhysiciansPer1000,
        d.LiteracyRatePct
 FROM Country AS c
@@ -206,10 +206,11 @@ JOIN CountryLanguage AS cl ON cl.CountryCode = c.Code
 JOIN HealthIndicator AS h ON h.CountryCode = c.Code AND h.IndicatorYear = 2023
 JOIN EducationIndicator AS d ON d.CountryCode = c.Code AND d.IndicatorYear = h.IndicatorYear
 WHERE cl.IsOfficial = 'T'
-  AND cl.CountryCode IN (
-      SELECT cl2.CountryCode
+  AND cl.Percentage > (
+      SELECT AVG(cl2.Percentage)
       FROM CountryLanguage AS cl2
-      WHERE cl2.Percentage > 0
+      WHERE cl2.CountryCode = c.Code
+        AND cl2.IsOfficial = 'T'
   )
 ORDER BY cl.Percentage DESC;
 
@@ -243,16 +244,16 @@ WHERE d.IndicatorYear = 2023
   ) > 0
 ORDER BY d.LiteracyRatePct DESC;
 
--- Q19. Countries with education spending at or above the sample minimum.
--- Purpose: compare education investment with poverty and national population.
+-- Q19. Countries with education spending above the sample average.
+-- Purpose: compare above-average education investment with poverty and population.
 SELECT c.Name, c.Population, d.EducationExpenditurePctGDP,
        d.LiteracyRatePct, e.PovertyRatePct
 FROM Country AS c
 JOIN EducationIndicator AS d ON d.CountryCode = c.Code
 JOIN EconomicIndicator AS e ON e.CountryCode = c.Code AND e.IndicatorYear = d.IndicatorYear
 WHERE d.IndicatorYear = 2023
-  AND d.EducationExpenditurePctGDP >= (
-      SELECT MIN(d2.EducationExpenditurePctGDP)
+  AND d.EducationExpenditurePctGDP > (
+      SELECT AVG(d2.EducationExpenditurePctGDP)
       FROM EducationIndicator AS d2
       WHERE d2.IndicatorYear = 2023
   )
