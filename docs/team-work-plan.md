@@ -1,10 +1,6 @@
 # Team work plan and handoff
 
-## Current starter branch
-
-Branch: `team-starter-work`
-
-This branch adds a project README, three country-level indicator tables with illustrative sample rows, 20 draft SQL investigations (10 JOIN-based and 10 subquery-based), design notes, and this team checklist. The original base SQL and diagram files are preserved.
+The repository now contains the base schema, extension SQL, 20 investigation queries, schema checks, source-retrieval utility, report draft, presentation notes, and submission checklist. The original base SQL and diagram artifacts are preserved. Use `docs/project-finalization-status.md` to track the remaining local verification and submission steps.
 
 ## Suggested division of work (four team members)
 
