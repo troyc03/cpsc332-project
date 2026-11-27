@@ -1,136 +1,107 @@
-# UN World Database Investigation: Report Draft
+# UN World Database Investigation
 
-**Team name:** [Insert]  
+**Team:** [Confirm team/project name]  
 **Course:** CPSC 332, Fall 2026  
-**Team members:** Troy Chin, Dominik Pelikan, Mohit Sharma, Armin Tehrani
-**Date:** 11/01/2026
+**Team members:** Troy Chin, Dominik Pelikan, Mohit Sharma, Armin Tehrani  
+**Draft date:** November 26, 2026
 
-## 1. Introduction
+> **Submission status:** This narrative draft is prepared, but local database execution, actual row counts, result screenshots, verified findings, updated ERD/physical-model images, and final Word formatting remain. Do not invent findings. The Word submission must use APA style, 12-point Times New Roman, double spacing, and at least four body pages excluding title and references.
 
-The project investigates a relational database built around the supplied World teaching database, which contains country, city, and country-language information. The team extends the original schema with country-year economic, health, and education indicators to support broader comparisons across countries. The objective is to practice relational modeling, constraints, SQL joins, subqueries, and data interpretation using a scenario framed around international development questions.
+## Introduction
 
-Economic conditions, health-system resources, and education indicators describe different dimensions of development and are useful for exploratory comparisons. The added entities allow these measures to be stored separately while connected to the original Country entity. The team’s questions investigate associations among the indicators and demographic attributes. These comparisons are descriptive and do not establish causation.
+This project extends the MySQL World teaching database to investigate relationships among country demographics, urban records, language data, and economic, health, and education indicators. The project is framed as a database investigation for an international organization interested in comparing country-level conditions and identifying questions for further research. The original schema contains Country, City, and CountryLanguage. We add EconomicIndicator, HealthIndicator, and EducationIndicator to organize development measures.
 
-**Project scope and questions:** [Describe the team's final research questions and why they were selected. Cite the official data sources actually used.]
+Population, city records, languages, income, poverty, education, and health measures describe different aspects of a country's context. Combining them can support descriptive comparisons, but an association in this sample does not establish that one factor causes another. The investigations demonstrate relational queries and frame questions rather than make policy claims.
 
-## 2. Database Development Process
+The added indicator tables currently contain illustrative sample values for 16 countries in 2023. These values are synthetic and are not official measurements. The classic World database is a teaching dataset and may reflect a different time period. The combined data therefore has temporal and representational limitations.
 
-### 2.1 Original schema and added entities
+## Database Development Process
 
-The base World schema provides Country, City, and CountryLanguage. The extension introduces EconomicIndicator, HealthIndicator, and EducationIndicator. Each added entity records country-level observations by year. The composite primary key CountryCode + IndicatorYear prevents duplicate records for the same country/year within each domain. CountryCode references Country.Code, providing referential integrity.
+### Original schema and extension
 
-The team separated economic, health, and education attributes into distinct tables rather than combining unrelated measures into one wide table. This design makes each domain easier to maintain and allows the schema to accommodate annual observations. The Country entity acts as the parent for the three added indicator tables.
+The base World database includes Country, City, and CountryLanguage. Country stores national attributes such as country code, name, continent, region, population, life expectancy, GNP, and capital. City stores city identifiers, names, country codes, districts, and population. CountryLanguage records languages associated with countries, including official status and percentage.
 
-### 2.2 Keys and constraints
+The project adds three tables. EconomicIndicator stores GDP per capita, unemployment rate, and poverty rate. HealthIndicator stores health expenditure as a percentage of GDP, physician density, and maternal mortality. EducationIndicator stores literacy, education expenditure, and tertiary enrollment. Each added table records a country and an observation year. The country-year design allows multiple annual observations rather than overwriting values as indicators change.
 
-The base Country table uses Code as its primary key. The City entity uses ID, and CountryLanguage uses the combination of CountryCode and Language. Each additional indicator entity uses a composite key consisting of CountryCode and IndicatorYear and includes a foreign key to Country.Code. CHECK constraints restrict years and numeric rates to reasonable ranges. [Confirm these constraints were tested in your MySQL version and describe any changes.]
+### Keys, relationships, and integrity
 
-### 2.3 ER diagram and relational models
+Country.Code is the parent key. City.ID is the City primary key, and CountryLanguage uses CountryCode and Language as its composite key in the supplied World schema. Each new indicator table uses the composite primary key (CountryCode, IndicatorYear), preventing duplicate observations for the same country and year within a domain. CountryCode in each indicator table references Country.Code. The added foreign keys use update cascading and restrict country deletion while dependent observations exist.
 
-[Insert the team's updated ER diagram and physical model images.]
+The extension includes CHECK constraints for observation years, nonnegative quantities, and percentage ranges. These rules reduce invalid values and support consistent interpretation. DECIMAL types are used for indicator measures. The three indicator tables are separate because economic, health, and education measurements represent distinct domains with different attributes.
 
-Explain the one-to-many relationships from Country to City, CountryLanguage, and each indicator table. Include the logical schema and physical implementation details, including data types, primary keys, foreign keys, and integrity rules.
+### Logical and physical models
 
-### 2.4 Data and limitations
+The logical model centers on Country and connects it to City, CountryLanguage, and the three added indicator entities. Country has one-to-many relationships with the child tables: a country may have many city records, language records, and annual indicator observations. The physical model specifies column types, keys, constraints, and implementation details. The logical ERD is documented in `docs/erd-logical.md`; the SQL implementation is in `sql/01_additional_tables.sql`.
 
-The initial extension script includes illustrative dummy indicator values for query development. They are not official measurements and must not be cited as factual national statistics. The base World teaching dataset is historical, while the extension sample uses 2023 as its observation year; temporal mismatch means comparisons should not be treated as perfectly aligned. The final team should either replace sample values with traceable source observations, or clearly disclose the dummy-data approach allowed by the assignment and restrict conclusions accordingly.
+**Insert the team's updated ER diagram and physical model images here.** Update the editable Workbench model and export a matching diagram before submission; the original diagram is not evidence of the completed extension.
 
-For each final source, document the indicator definition, country, year, units, source URL, and retrieval date. [Insert sourced-data method and details.]
+### Data and limitations
 
-## 3. Database Investigation
+The extension seed data is illustrative, not sourced statistics, and must not be attributed to the World Bank, United Nations, or another organization. The repository includes a retrieval script that collects World Bank observations into a provenance CSV; it does not load those observations into MySQL. Before replacing sample rows, the team must choose actual observations, handle missing values, align years across indicators, update the SQL, and document source, units, year, URL, and retrieval date. The current sample is small and nonrandom, and the base World records and 2023 sample may not be temporally aligned. Country-level measures joined to city or language records remain national measures, not city- or language-level outcomes.
 
-The assignment requires 20 investigations, with 10 JOIN-oriented and 10 subquery-oriented queries, and at least four returned rows for each query. The team must execute the queries against the actual database, record row counts, and include evidence.
+## Database Investigation
 
-For each query below, fill in: (1) the question and purpose, (2) final SQL, (3) returned row count and output evidence, and (4) interpretation supported by the results. Avoid causal claims.
+The SQL file `sql/02_investigation_queries.sql` contains 20 queries: Q01–Q10 are JOIN-oriented and Q11–Q20 are subquery-oriented. Each query combines at least one original World table with one added indicator table. The course requires every query to return at least four rows. This requirement must be checked on the team's actual MySQL installation. The complete SQL is preserved in the repository query file and in `docs/query-appendix.md`; copy/include the query text in the Word report.
 
-### 3.1 JOIN investigations (Q01-Q10)
+### JOIN investigations (Q01–Q10)
 
-**Q01. Country development profile.** Compare economic, health, and education indicators across countries.  
-**Purpose and significance:** [Explain what this multi-domain profile helps compare.]  
-**Validated row count / output:** [Insert evidence.]  
-**Interpretation:** [Write based on the verified output.]
+| Query | Research question and purpose |
+|---|---|
+| Q01 | Build a country development profile by joining economic, health, and education indicators. |
+| Q02 | Compare national population and GDP per capita with the count and largest population of listed cities. |
+| Q03 | Explore official-language records alongside literacy and education spending. Language records are demographic context, not evidence that language causes literacy. |
+| Q04 | Compare health spending, physician density, and maternal mortality across continents. |
+| Q05 | Compare large listed cities with country-level physician density and health spending; these are national measures. |
+| Q06 | Relate listed city populations to country-level GDP per capita and poverty sample values. |
+| Q07 | Compare education expenditure, tertiary enrollment, literacy, and income. |
+| Q08 | Explore official-language population shares in the context of country-level poverty and income. |
+| Q09 | Compare country population and listed-city coverage with literacy and tertiary enrollment. City coverage may reflect source coverage, not a complete urban census. |
+| Q10 | Integrate official-language records, city counts, health resources, and income into a multi-domain comparison. |
 
-**Q02. National population and city scale.** Compare national population and GDP per capita with listed city counts and largest-city population.  
-**Purpose and significance:** [Explain the question.]  
-**Validated row count / output:** [Insert evidence.]  
-**Interpretation:** [Verified result only.]
+### Subquery investigations (Q11–Q20)
 
-**Q03. Official language, literacy, and education investment.** Explore how official-language records relate to education indicators.  
-**Purpose and significance:** [Explain; do not imply language causes literacy.]  
-**Validated row count / output:** [Insert evidence.]  
-**Interpretation:** [Verified result only.]
+| Query | Research question and purpose |
+|---|---|
+| Q11 | Identify sample countries above sample-average GDP per capita and compare physician density. |
+| Q12 | Find countries above sample-average literacy and examine education spending and language records. |
+| Q13 | Identify countries above sample-average poverty that have at least one listed city. |
+| Q14 | Select countries represented by populated city records and compare health and income indicators. |
+| Q15 | Select countries above sample-average GDP per capita and compare literacy and tertiary enrollment. |
+| Q16 | Compare each official language's listed share with the within-country average official-language share, alongside health and literacy. |
+| Q17 | Identify countries above the World-table population average and compare health resources and poverty sample values. |
+| Q18 | Use a correlated subquery to select countries with a positive total listed city population and compare education and income. |
+| Q19 | Identify countries above sample-average education expenditure and compare literacy, poverty, and population. |
+| Q20 | Use EXISTS to select countries with official-language records and compare maternal mortality, health expenditure, and income. |
 
-**Q04. Health resources by continent.** Compare health spending and physician availability across countries and continents.  
-**Purpose and significance:** [Explain relevance.]  
-**Validated row count / output:** [Insert evidence.]  
-**Interpretation:** [Verified result only.]
+### Query validation and findings
 
-**Q05. City population and national health indicators.** Compare large listed cities with national health resources.  
-**Purpose and significance:** [Explain the national-vs-city limitation.]  
-**Validated row count / output:** [Insert evidence.]  
-**Interpretation:** [Verified result only.]
+**Validation record:** Run Q01–Q20 against the team's MySQL database. Record MySQL version, date, tester, actual row count for every query, whether it meets the minimum of four, and errors/fixes. Attach screenshots or exports. Use `docs/validation-results-template.md`.
 
-**Q06. Urban population, income, and poverty.** Explore large cities in countries with differing economic indicators.  
-**Purpose and significance:** [Explain.]  
-**Validated row count / output:** [Insert evidence.]  
-**Interpretation:** [Verified result only.]
+| Query group | Required validation | Status |
+|---|---|---|
+| Q01–Q10 JOIN queries | Run all 10; each must return at least 4 rows | Pending local execution |
+| Q11–Q20 subquery queries | Run all 10; each must return at least 4 rows | Pending local execution |
 
-**Q07. Education expenditure and tertiary enrollment.** Compare education spending, enrollment, literacy, and income.  
-**Purpose and significance:** [Explain.]  
-**Validated row count / output:** [Insert evidence.]  
-**Interpretation:** [Verified result only.]
+**Results interpretation:** [Insert only observations supported by actual output. Describe patterns and exceptions, not causal explanations. Do not present synthetic values as official national statistics.]
 
-**Q08. Language-share and poverty comparison.** Compare official-language records and country poverty/income values.  
-**Purpose and significance:** [Discuss demographic context and limitations.]  
-**Validated row count / output:** [Insert evidence.]  
-**Interpretation:** [Verified result only.]
+## Summary
 
-**Q09. Country population, listed cities, and education.** Compare city coverage and education measures.  
-**Purpose and significance:** [Explain the meaning of city records and coverage.]  
-**Validated row count / output:** [Insert evidence.]  
-**Interpretation:** [Verified result only.]
+The project demonstrates how a relational schema can connect a central Country entity with demographic, urban, language, and annual indicator information. The added country-year tables illustrate composite keys, foreign keys, integrity constraints, and domain separation. The 20 investigations practice joins, subquery filters, grouping, and sample-average comparisons.
 
-**Q10. Integrated language, city, health, and income profile.** Combine several domains for exploration.  
-**Purpose and significance:** [Explain the multidimensional policy use.]  
-**Validated row count / output:** [Insert evidence.]  
-**Interpretation:** [Verified result only.]
-
-### 3.2 Subquery investigations (Q11-Q20)
-
-**Q11. Above-average GDP per capita.** Identify countries above the sample's mean GDP per capita and compare physician availability.  
-[Insert final SQL, tested row count, output, interpretation.]
-
-**Q12. Literacy relative to the sample minimum.** Examine literacy, education expenditure, and language records.  
-[Insert final SQL, tested row count, output, interpretation.]
-
-**Q13. Above-average poverty and listed-city existence.** Find countries above sample-average poverty that have a City record.  
-[Insert final SQL, tested row count, output, interpretation.]
-
-**Q14. Countries with city records and health observations.** Use a subquery to filter countries represented by cities.  
-[Insert final SQL, tested row count, output, interpretation.]
-
-**Q15. GDP per capita above the sample minimum.** Explore education outcomes across countries above the minimum GDP-per-capita observation.  
-[Insert final SQL, tested row count, output, interpretation.]
-
-**Q16. Official-language record and positive share.** Pair language records with health and education data using a subquery.  
-[Insert final SQL, tested row count, output, interpretation.]
-
-**Q17. Countries above the World-table population average.** Compare population scale with health and economic indicators.  
-[Insert final SQL, tested row count, output, interpretation.]
-
-**Q18. Countries with positive listed-city population totals.** Compare education indicators among countries whose City population sum is positive.  
-[Insert final SQL, tested row count, output, interpretation.]
-
-**Q19. Education expenditure at or above the sample minimum.** Compare expenditure, literacy, poverty, and population.  
-[Insert final SQL, tested row count, output, interpretation.]
-
-**Q20. Official-language existence and health/income.** Summarize health and income measures for countries with official-language records.  
-[Insert final SQL, tested row count, output, interpretation.]
-
-## 4. Summary
-
-[Summarize verified patterns from the query outputs. Discuss the most interesting observations, technical challenges, schema choices, query-writing lessons, and limitations. Mention which conclusions are descriptive only. Do not invent findings.]
+A key technical lesson is that query logic and data assumptions must be checked together. Joining annual indicators requires year alignment, and joining country-level measures to city or language records can multiply rows. Aggregate queries must account for that multiplicity, while comparisons must respect each table's data grain. The final report should include verified row counts and output-based findings after local execution. Remaining limitations include synthetic sample values, the selected country sample, historical base data, temporal mismatch, and the absence of causal analysis.
 
 ## References
 
-Add APA-formatted references for the official sources the team actually accessed and used, along with any course materials cited. Candidate source portals are listed in `docs/data-sources.md`; confirm exact indicator definitions and retrieved observations before citing them.
+World Bank. (n.d.). *World Development Indicators*. https://databank.worldbank.org/source/world-development-indicators
+
+World Bank. (n.d.). *World Bank API documentation*. https://datahelpdesk.worldbank.org/knowledgebase/articles/889392
+
+World Bank. (n.d.). *GDP per capita (current US$)*. https://data.worldbank.org/indicator/NY.GDP.PCAP.CD
+
+World Bank. (n.d.). *Unemployment, total (% of labor force)*. https://data.worldbank.org/indicator/SL.UEM.TOTL.ZS
+
+World Bank. (n.d.). *Current health expenditure (% of GDP)*. https://data.worldbank.org/indicator/SH.XPD.CHEX.GD.ZS
+
+World Bank. (n.d.). *Literacy rate, adult total (% of people ages 15 and above)*. https://data.worldbank.org/indicator/SE.ADT.LITR.ZS
+
+> References are candidate documentation for definitions and retrieval. Because the SQL seed rows are synthetic and the retrieval script has not been integrated into the database, do not claim these sources supplied the inserted values. Cite only sources actually consulted for the final data and claims.
