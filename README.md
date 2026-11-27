@@ -37,22 +37,19 @@ The assignment calls for at least three additional tables, primary and foreign k
 
 ## Completion support files (added on `completion-work`)
 
-- `tests/check_query_rows.py`: executes all 20 SELECT queries and reports actual row counts / minimum-four-row pass status. This is a test tool, not proof that the queries have been run.
-- `tests/requirements.txt`: Python connector dependency.
-- `docs/validation-results-template.md`: query-by-query test evidence record.
-- `docs/report-outline-and-writing-guide.md`: report structure and writing/format checklist.
-- `docs/presentation-outline.md`: 10-slide, 10-15-minute presentation outline.
-- `docs/data-sources.md`: candidate official World Bank indicators and URLs. The current indicator rows remain synthetic until replaced with retrieved, cited observations.
+## Project completion and submission files
 
-Run query validation after loading the base schema and indicator extension:
+- `docs/validation-results-template.md`: record each query's actual row count, errors, tester, and date. The row-count validator script was removed; execute queries in MySQL Workbench and record evidence here.
+- `docs/report-outline-and-writing-guide.md`: APA report requirements and formatting checklist.
+- `docs/report-draft.md`: completed narrative draft and query-purpose summary; actual query outputs, results interpretations, ERD/model images, and final Word formatting still require team work.
+- `docs/presentation-outline.md`: 10-slide plan with speaker notes and demo checklist.
+- `docs/project-finalization-status.md`: remaining local validation and submission checklist.
+- `docs/data-sources.md`: candidate indicator source references. The inserted values remain synthetic and are not sourced statistics.
 
-```bash
-python -m pip install -r tests/requirements.txt
-MYSQL_HOST=127.0.0.1 MYSQL_PORT=3306 MYSQL_USER=root MYSQL_PASSWORD='your-password' MYSQL_DATABASE=world python tests/check_query_rows.py
-```
 
-The validation script does not alter the database. It prints each query's returned row count and exits nonzero if a query errors or returns fewer than four rows.
+## Local SQL validation (MySQL Workbench)
 
+The Python validator is not required. After loading the base schema and additional tables, open `sql/02_investigation_queries.sql` in Workbench and execute each SELECT individually. Record actual row counts and screenshots/exports in `docs/validation-results-template.md`. The course requires each of the 20 queries to return at least four rows. Also run `sql/03_schema_verification.sql` to inspect the schema and referential-integrity checks. Do not report successful validation until these commands have been run locally.
 ## Additional coding validation and source tools
 
 - `sql/03_schema_verification.sql`: run after the extension script to inspect PK/FK metadata, row counts, duplicate composite keys, and orphan country codes. Expected duplicate/orphan checks return no rows.
