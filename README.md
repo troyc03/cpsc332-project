@@ -35,8 +35,6 @@ The extension script expects the original `world.Country`, `world.City`, and `wo
 The assignment calls for at least three additional tables, primary and foreign keys, relationships/integrity constraints, 20 innovative SQL queries (at least 10 using joins and at least 10 using subqueries), and a four-page-minimum APA-style report (excluding title and references) plus a 10–15 minute presentation. See the course instructions supplied to the team for the authoritative requirements and due date.
 
 
-## Completion support files (added on `completion-work`)
-
 ## Project completion and submission files
 
 - `docs/validation-results-template.md`: record each query's actual row count, errors, tester, and date. The row-count validator script was removed; execute queries in MySQL Workbench and record evidence here.
@@ -50,7 +48,7 @@ The assignment calls for at least three additional tables, primary and foreign k
 ## Local SQL validation (MySQL Workbench)
 
 The Python validator is not required. After loading the base schema and additional tables, open `sql/02_investigation_queries.sql` in Workbench and execute each SELECT individually. Record actual row counts and screenshots/exports in `docs/validation-results-template.md`. The course requires each of the 20 queries to return at least four rows. Also run `sql/03_schema_verification.sql` to inspect the schema and referential-integrity checks. Do not report successful validation until these commands have been run locally.
-## Additional coding validation and source tools
+## Data retrieval and schema checks
 
 - `sql/03_schema_verification.sql`: run after the extension script to inspect PK/FK metadata, row counts, duplicate composite keys, and orphan country codes. Expected duplicate/orphan checks return no rows.
 - `scripts/fetch_worldbank_data.py`: retrieves traceable World Bank indicator observations for the sample countries (2019–2023) into `data/worldbank_observations.csv`; it does not load the database or replace the illustrative SQL inserts.
